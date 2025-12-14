@@ -1,0 +1,26 @@
+.dashboard-background {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    // justify-content: space-between;
+    // justify-content: center;
+    // align-items: center;
+    min-height: 100vh;
+    // background: url('../assets/login-background10.jpg') no-repeat;
+    // background-size: cover;
+    // background-position: center;
+    // margin: 0;
+    // padding: 16;
+    // box-sizing: border-box;
+    // overflow: hidden;
+    
+}
+
+.content {
+    width: 100%; /* Set the width to 100% of the parent */
+    max-width: 100%; /* Ensure it doesn't grow beyond the screen size */
+    box-sizing: border-box; /* Include padding and borders in the element's width */
+    // padding: 0 20px; /* Optional: Add some padding inside the content */
+    // margin: auto; /* Center the content if it's smaller than the screen width */
+    overflow-x: auto; /* Adds a scrollbar if the content is wider than the screen */
+}

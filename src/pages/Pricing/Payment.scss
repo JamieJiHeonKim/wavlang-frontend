@@ -1,0 +1,242 @@
+.payment-section {
+    .payment-container {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 10px 20px 0 rgba(0,0,0,0.1);
+      max-width: 100%;
+      display: flex; // Use flexbox to align items side by side
+      overflow: hidden; // Ensure the children don't overflow the rounded corners
+    }
+  
+    .modal-body {
+        display: flex;
+        width: 100%; // Full width to accommodate both sides
+
+        .plan-details {
+        flex: 1; // Take up half the space
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; // Space between title and recurrence
+
+            h2, p {
+                margin: 0 0 1em 0; // Add space below headings and paragraphs
+            }
+
+            p {
+                font-size: 1.1em; // Make certain texts larger
+                font-weight: bold; // Make them bold
+            }
+
+            ul {
+                list-style: none; // Remove default list styling
+                padding: 0;
+                margin: 1em 0; // Add some space above and below the list
+
+                li {
+                padding: 0.5em 0; // Add space between bullet points
+                }
+            }
+        }
+
+        .divider {
+            width: 2px;
+            background-color: #e1e1e1;
+            align-self: stretch; // Make the divider stretch full height
+        }
+
+        .payment-details {
+            flex: 1; // Take up the remaining half
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; // Align form items to the start
+
+            .payment-form {
+                gap: 15px; // Ensure form takes up all the available space
+            }
+        }
+    }
+    
+    // Style the input and buttons similar to your previous settings
+    input, button, .StripeElement {
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+        height: 40px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        &:focus {
+            outline: none;
+            border-color: #6772e5;
+            box-shadow: 0 0 0 1px #6772e5;
+        }
+    }
+
+    input:not(:last-child), .StripeElement:not(:last-child) {
+        margin-bottom: 12px; // Adds space after each input except the last one
+    }
+}
+
+button {
+    background: #6772e5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+
+    &:hover {
+        background: #5469d4;
+    }
+
+    &:disabled {
+        background: #ccd0d2;
+        cursor: not-allowed;
+    }
+}
+
+.modal-body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; // Adjust the alignment as needed
+    background: #fff; // or any color you want for the modal background
+    padding: 20px;
+    border-radius: 8px; // Optional, for rounded corners
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Dim the background */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Align items to the center of the container */
+    z-index: 9998; /* Ensure it's above other elements */
+}
+  
+.modal-content {
+    background: white;
+    padding: 40px; // Increased padding for better spacing
+    border-radius: 8px;
+    max-width: 600px; // Set a max-width that works for your design
+    width: auto; // Let it auto-adjust to the content
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 9999;
+    margin: auto; // Center the modal horizontally
+    display: flex;
+    flex-direction: column; // Stack children vertically
+    align-items: center; // Center-align the content
+    gap: 20px; // Adds space between children
+
+    .login-prompt {
+        text-align: center; // Center-align the text
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px; // Adds space between text and button
+
+        h2 {
+            margin-bottom: 16px;
+            font-size: 24px; // Larger font size for the heading
+            font-weight: bold; // Make it bold
+        }
+
+        p {
+            font-size: 18px; // Slightly larger font size for the paragraph
+        }
+
+        .login-btn {
+            background: #6772e5;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 24px; // Larger padding for a bigger button
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+
+            &:hover {
+                background-color: #5469d4; // A lighter shade on hover
+            }
+        }
+    }
+}
+  
+.plan-details {
+    flex: 1;
+    padding: 20px;
+    text-align: left; // Align the text to the left
+  
+    ul {
+        list-style: none; // Remove list bullets
+        padding: 0;
+        margin: 0;
+    }
+  
+    li::before {
+        content: '•'; // Add a custom bullet
+        color: #6772e5; // Give it a custom color
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+    }
+}
+  
+.divider {
+    width: 2px; /* Thickness of the divider */
+    background-color: #e1e1e1; /* Divider color */
+    align-self: stretch; /* Stretch to fill the parent's height */
+} 
+
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+  
+.dollar-sign {
+    position: absolute;
+    margin-left: 10px;
+    color: #000;
+    margin-bottom: 10px;
+}
+  
+.dollar-input {
+    padding-left: 20px;
+    width: 100%;
+}
+  
+input[type='number'] {
+    padding-left: 20px; /* Make room for the dollar sign */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .modal-content {
+        flex-direction: column; /* Stack sections on smaller screens */
+        width: 90%; // Take up more screen space on smaller screens
+        padding: 30px; // Slightly less padding on smaller screens
+        max-width: none; /* Override the max-width */
+    }
+    
+    .modal-body {
+        flex-direction: column; // Stack the plan details and payment details on smaller screens
+    }
+  
+    .divider {
+        width: 100%; /* Full width divider */
+        height: 2px; /* Thin horizontal line */
+        margin: 20px 0; /* Space above and below the divider */
+    }
+}

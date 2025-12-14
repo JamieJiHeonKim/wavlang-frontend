@@ -1,0 +1,65 @@
+@import '../../../sass/colors.scss';
+
+.uploader {
+    margin-top: 40px;
+}
+
+.delete-button button:hover {
+	color: #000000;
+}
+
+.uploaded-row {
+    /* margin: 10px 0; */
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-radius: 5px;
+    background-color: #e9f0ff;
+    margin-top: 20px;
+    text-align: relative;
+    /* display: inline-block; */
+}
+
+.uploaded-content {
+    display: flex;
+    align-items: center;
+}
+
+.main-property {
+    display: inline-block;
+}
+
+.upload-box{
+    width: auto;
+    height: auto;
+    align-items: center;
+}
+
+.transcription {
+    background-color: rgb(233, 250, 255);
+}
+
+.transcribe-section {
+    text-align: center;
+    max-width: 650px;
+    margin: 150px auto 100px;
+    h2 {
+        font-size: 40px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+}
+
+.searchbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.p-searchbar {
+    text-align: center;
+}

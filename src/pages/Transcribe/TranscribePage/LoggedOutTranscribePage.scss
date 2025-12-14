@@ -1,0 +1,29 @@
+@import '../../../sass/colors.scss';
+
+.h4-title {
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    width: 100%;
+    font-size: 30px;
+}
+
+.login-btn {
+    background: $color-white;
+    color: $color-black;
+    padding: 14px 20px;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: .3s;
+    // border: 1px solid transparent;
+    border: 1px solid $color-black;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-block;
+    box-shadow: 0px 7px 29px 0px rgba(100, 100, 111, 0.2);
+
+    &:hover {
+        background: $color-black;
+        color: $color-white;
+        border: 1px solid $color-black;
+    }
+}

@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppings:wfht@400;600;700&display=swap');
+
+// * {
+//     margin: 0;
+//     padding: 0;
+//     box-sizing: border-box;
+//     overflow: hidden;
+// }
+
+.login-background {
+    // font-family: 'Poppins', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    // background: url('../assets/login-background10.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.wrapper {
+    min-width: 450px;
+}
+
+// Mobile Responsive
+@media (max-width: 575px){
+    .section-common {
+        margin: 0 15px;
+        border-radius: 20px;
+    }
+
+    p {
+        font-size: 16px;
+    }
+
+    .pt-100 {
+        padding-top: 50px;
+    }
+    .pb-70 {
+        padding-bottom: 20px;
+    }
+}
+@media (min-width: 576px) and (max-width: 767px) {
+    .section-common {
+        margin: 0 15px;
+        border-radius: 20px;
+    }
+
+    p {
+        font-size: 16px;
+    }
+
+    .pt-100 {
+        padding-top: 50px;
+    }
+    .pb-70 {
+        padding-bottom: 20px;
+    }
+}
+
+// Medium Responsive
+@media (min-width: 758px) and (max-width: 991px) {
+    .pt-100 {
+        padding-top: 70px;
+    }
+    .pb-70 {
+        padding-bottom: 40px;
+    }
+}
