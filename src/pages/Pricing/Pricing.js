@@ -1,17 +1,9 @@
 import { React, useState, useEffect } from 'react';
 import './Pricing.scss';
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
-import Payment from './Payment';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
-
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
-
-// Task 1: Keep custom amount for Pay-As-You-Go only
-// Task 2: Implement regular subscription for monthly and annual
 
 const Modal = ({ isOpen, onClose, children }) => {
     if (!isOpen) return null;
@@ -27,11 +19,9 @@ const Modal = ({ isOpen, onClose, children }) => {
 
 const Pricing = () => {
     const [open, setOpen] = useState("p2");
-    const [clientSecret, setClientSecret] = useState("");
     const [isModalOpen, setModalOpen] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState({});
     const [isVerified, setIsVerified] = useState(false);
-    const [selectedCustomAmount, setSelectedCustomAmount] = useState(100);
 
     let navigate = useNavigate();
     const handleLoginRedirect = () => {
@@ -89,7 +79,8 @@ const Pricing = () => {
         }
         try {
             const decoded = jwtDecode(userToken);
-            const res = await axios.get(`http://localhost:8080/api/user/authenticated`, {
+            const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+            const res = await axios.get(`${apiUrl}/api/user/authenticated`, {
                 headers: { 
                     'x-access-token': decoded.userId,
                     'email': userEmail
@@ -118,34 +109,9 @@ const Pricing = () => {
             return;
         };
 
-        if (plan.name === "Pay As You Go") {
-            setSelectedCustomAmount(100);
-        } else {
-            setSelectedCustomAmount(null);
-        };
-
-        const amount = Math.round(plan.price * 100);
-
-        try {
-            const response = await fetch('http://localhost:8080/api/stripe/create-payment-intent', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ amount })
-            });
-            if (response.ok) {
-                const paymentIntent = await response.json();
-                setClientSecret(paymentIntent.clientSecret);
-                setSelectedPlan(plan)
-                setModalOpen(true);
-            }
-            else {
-                throw new Error('Network response was not ok: ' + response.statusText);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
+        // Store selected plan and show modal
+        setSelectedPlan(plan);
+        setModalOpen(true);
     };
     
     const handleCloseModal = () => setModalOpen(false);
@@ -251,15 +217,15 @@ const Pricing = () => {
             </div>
             <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
                 {isVerified ? (
-                    clientSecret && selectedPlan && (
-                        <Elements stripe={stripePromise}>
-                            <Payment 
-                                clientSecret={clientSecret} 
-                                planDetails={selectedPlan} 
-                                customAmount={selectedPlan.name === "Pay As You Go" ? selectedCustomAmount : undefined}
-                            />
-                        </Elements>
-                    )
+                    <div className='login-prompt'>
+                        <h2>Payment Coming Soon</h2>
+                        <p style={{ paddingBottom: '15px', textAlign: 'center' }}>
+                            Payment processing for the <strong>{selectedPlan.name}</strong> plan will be available soon.
+                            <br />
+                            Price: <strong>${selectedPlan.price}</strong> {selectedPlan.recurrence && `- ${selectedPlan.recurrence}`}
+                        </p>
+                        <button onClick={handleCloseModal} className='login-btn'>Close</button>
+                    </div>
                 ) : (
                     <div className='login-prompt'>
                         <h2>Access Restricted</h2>

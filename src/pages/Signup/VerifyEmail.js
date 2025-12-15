@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import OTPInput from 'react-otp-input';
 
-const baseUrl = 'http://localhost:8080/api/';
+const baseUrl = `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api`;
 
 const VerifyEmail = () => {
     const location = useLocation();
