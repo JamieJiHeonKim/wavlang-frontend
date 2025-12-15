@@ -2,7 +2,7 @@
 
 An intelligent audio transcription and analysis platform powered by AI. Upload audio files, get instant transcriptions, and receive AI-powered insights including sentiment analysis, key points extraction, and more.
 
-**WavLang URL:** [wavlang-website](https://wavlang-frontend-production.up.railway.app/)
+**WavLang URL:** [wavlang-url](https://wavlang-frontend-production.up.railway.app/)
 
 **Backend Repository:** [wavlang-backend](https://github.com/JamieJiHeonKim/wavlang-backend)
 
