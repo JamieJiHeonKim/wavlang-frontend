@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import './TranscribePage.scss';
 import AudioPlayer from '../AudioPlayer';
 // import Transcribe from '../Whisper/TranscribeWhisper';
@@ -257,6 +257,20 @@ function TranscribePage() {
     const [analysisLanguage, setAnalysisLanguage] = useState('English');
     const { isLoggedIn } = useAuth();
 
+    // Memoize audio URL to prevent AudioPlayer re-renders during transcription
+    const audioUrl = useMemo(() => {
+        return file ? URL.createObjectURL(file) : null;
+    }, [file]);
+
+    // Cleanup audio URL when component unmounts or file changes
+    useEffect(() => {
+        return () => {
+            if (audioUrl) {
+                URL.revokeObjectURL(audioUrl);
+            }
+        };
+    }, [audioUrl]);
+
     // props DropFileInput
     const onFileChange = (file) => {
         console.log(file);
@@ -358,7 +372,7 @@ function TranscribePage() {
                                 onFileChange={(file) => onFileChange(file)}
                             />
                         </div>
-                    { fileUploaded ? <AudioPlayer file={URL.createObjectURL(file)} fileName={file.name} /> : <></> }
+                    { fileUploaded && audioUrl ? <AudioPlayer file={audioUrl} fileName={file.name} /> : <></> }
                     {!isLoggedIn && (
                         <Alert variant="warning" className="login-alert">
                             You must be logged in to use the transcription feature.

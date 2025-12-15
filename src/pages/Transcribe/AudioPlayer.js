@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, memo } from 'react';
 import './AudioPlayer.scss';
 import WaveSurfer from 'wavesurfer.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -31,7 +31,7 @@ function formatTime(seconds) {
     return date.toISOString().substr(11, 8);
 }
 
-function AudioPlayer({ file, fileName }) {
+const AudioPlayer = memo(({ file, fileName }) => {
     const waveformRef = useRef(null);
     const wavesurfer = useRef(null);
     const [playing, setPlaying] = useState(false);
@@ -43,30 +43,67 @@ function AudioPlayer({ file, fileName }) {
     const [audioFile, setAudioFile] = useState(null)
 
     useEffect(() => {
-        // Create WaveSurfer instance with options
-        const options = formWaveSurferOptions(waveformRef.current);
-        wavesurfer.current = WaveSurfer.create(options);
-
-        // Load the audio file
-        wavesurfer.current.load(file);
-
-        // When WaveSurfer is ready
-        wavesurfer.current.on('ready', () => {
-            setVolume(wavesurfer.current.getVolume());
-            setDuration(wavesurfer.current.getDuration());
-            setAudioFileName(file.split('/').pop());
-        });
-
-        // Update current time in state as audio plays
-        wavesurfer.current.on('audioprocess', () => {
-            setCurrentTime(wavesurfer.current.getCurrentTime());
-        });
+        let isActive = true;
+        let ws = null;
         
-        // Clean up event listeners and destroy instance on unmount
+        const initWavesurfer = async () => {
+            try {
+                const options = formWaveSurferOptions(waveformRef.current);
+                ws = WaveSurfer.create(options);
+                wavesurfer.current = ws;
+
+                ws.on('error', (error) => {
+                    if (!isActive) return;
+                    
+                    if (error?.name === 'AbortError' || error?.message?.includes('aborted')) {
+                        return;
+                    }
+                    console.error('WaveSurfer error:', error);
+                });
+
+                ws.on('ready', () => {
+                    if (isActive) {
+                        setVolume(ws.getVolume());
+                        setDuration(ws.getDuration());
+                        setAudioFileName(file.split('/').pop());
+                    }
+                });
+
+                ws.on('audioprocess', () => {
+                    if (isActive) {
+                        setCurrentTime(ws.getCurrentTime());
+                    }
+                });
+
+                ws.load(file);
+            } catch (error) {
+                if (isActive && error?.name !== 'AbortError') {
+                    console.error('Error initializing WaveSurfer:', error);
+                }
+            }
+        };
+
+        initWavesurfer();
+        
         return () => {
-            wavesurfer.current.un('audioprocess');
-            wavesurfer.current.un('ready');
-            wavesurfer.current.destroy();
+            isActive = false;
+            
+            if (ws) {
+                try {
+                    if (ws.isPlaying && ws.isPlaying()) {
+                        ws.pause();
+                    }
+                    
+                    ws.unAll();
+                    
+                    if (ws.empty) {
+                        ws.empty();
+                    }
+                    
+                    wavesurfer.current = null;
+                } catch (e) {
+                }
+            }
         };
     }, [file]);
 
@@ -76,33 +113,53 @@ function AudioPlayer({ file, fileName }) {
     //     return date.toISOString().substr(11, 8);
     // }
 
-    // Toggle playback of audio
     const handlePlayPause = () => {
-        setPlaying(!playing);
-        wavesurfer.current.playPause();
+        try {
+            if (wavesurfer.current) {
+                setPlaying(!playing);
+                wavesurfer.current.playPause();
+            }
+        } catch (e) {
+        }
     };
 
-    // Adjust audio volume
     const handleVolumeChange = (newVolume) => {
-        setVolume(newVolume);
-        wavesurfer.current.setVolume(newVolume);
-        setMuted(newVolume === 0);
+        try {
+            if (wavesurfer.current) {
+                setVolume(newVolume);
+                wavesurfer.current.setVolume(newVolume);
+                setMuted(newVolume === 0);
+            }
+        } catch (e) {
+        }
     };
 
-    // Toggle mute/unmute audio
     const handleMute = () => {
-        setMuted(!muted);
-        wavesurfer.current.setVolume(muted ? volume : 0);
+        try {
+            if (wavesurfer.current) {
+                setMuted(!muted);
+                wavesurfer.current.setVolume(muted ? volume : 0);
+            }
+        } catch (e) {
+        }
     };
 
-    // Increase volume by 10%
     const handleVolumeUp = () => {
-        handleVolumeChange(Math.min(volume + 0.1, 1));
+        try {
+            if (wavesurfer.current) {
+                handleVolumeChange(Math.min(volume + 0.1, 1));
+            }
+        } catch (e) {
+        }
     };
 
-    // Decrease volume by 10%
     const handleVolumeDown = () => {
-        handleVolumeChange(Math.max(volume - 0.1, 0));
+        try {
+            if (wavesurfer.current) {
+                handleVolumeChange(Math.max(volume - 0.1, 0));
+            }
+        } catch (e) {
+        }
     };
 
     return (
@@ -157,6 +214,11 @@ function AudioPlayer({ file, fileName }) {
             </div>
         </div>
     )
-}
+}, (prevProps, nextProps) => {
+    // Only re-render if file or fileName actually changes
+    return prevProps.file === nextProps.file && prevProps.fileName === nextProps.fileName;
+});
+
+AudioPlayer.displayName = 'AudioPlayer';
 
 export default AudioPlayer;

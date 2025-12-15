@@ -76,6 +76,11 @@ function TranscribeWhisper({file, topic, analysisType, analysisLanguage}) {
                         "Content-Type": "multipart/form-data",
                         Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
                     },
+                    timeout: 120000, // 2 minutes timeout for transcription
+                    onUploadProgress: (progressEvent) => {
+                        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                        console.log(`Upload Progress: ${percentCompleted}%`);
+                    },
                 })
                 .then((res) => {
                     console.log(res.data);
@@ -85,16 +90,38 @@ function TranscribeWhisper({file, topic, analysisType, analysisLanguage}) {
                     getAnalysisType(res, topic);
                 })
                 .catch((err) => {
+                    if (axios.isCancel(err) || err.name === 'AbortError' || err.name === 'CanceledError') {
+                        console.log('Transcription request was cancelled');
+                        return;
+                    }
                     console.log(err)
                     setScriptLoaded(true);
                 });
         } catch (error) {
+            if (axios.isCancel(error) || error.name === 'AbortError' || error.name === 'CanceledError') {
+                console.log('Transcription request was cancelled');
+                return;
+            }
             throw error;
         }
     };
 
     useEffect(() => {
-        fetchAudioFile();
+        if (!file) return;
+        
+        let isActive = true;
+        
+        const runFetch = async () => {
+            if (isActive) {
+                await fetchAudioFile();
+            }
+        };
+        
+        runFetch();
+        
+        return () => {
+            isActive = false;
+        };
     }, [file]);
 
     const getAnalysisType = async (result, topicType) => {        
@@ -234,9 +261,19 @@ function TranscribeWhisper({file, topic, analysisType, analysisLanguage}) {
                 <div className='text-body' contentEditable>
                     {response}
                 </div> : 
-                <SpinningCircles className='loadingIcon' fill='#919191' stroke="transparent" strokeOpacity={.2} speed={1.25} />}
+                <div style={{ textAlign: 'center' }}>
+                    <SpinningCircles className='loadingIcon' fill='#919191' stroke="transparent" strokeOpacity={.2} speed={1.25} />
+                    <p style={{ marginTop: '10px', color: '#666' }}>Transcribing audio... This may take a moment.</p>
+                </div>
+            }
             <br />
-            {analysisLoaded ? <div className='text-body'>{keyPoints}</div> : <SpinningCircles className='loadingIcon' fill='#919191' stroke="transparent" strokeOpacity={.2} speed={1.25} />}
+            {analysisLoaded ? 
+                <div className='text-body'>{keyPoints}</div> : 
+                <div style={{ textAlign: 'center' }}>
+                    <SpinningCircles className='loadingIcon' fill='#919191' stroke="transparent" strokeOpacity={.2} speed={1.25} />
+                    <p style={{ marginTop: '10px', color: '#666' }}>Generating analysis...</p>
+                </div>
+            }
             <br />
         </div>  
     );

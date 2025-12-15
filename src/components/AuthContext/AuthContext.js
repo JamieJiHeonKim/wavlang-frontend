@@ -29,7 +29,8 @@ export const AuthProvider = ({ children }) => {
                 const decoded = jwtDecode(userToken);
                 console.log('decoded:', decoded);
                 console.log('email:', userEmail);
-                const response = await axios.get('http://localhost:8080/api/user/authenticated', {
+                const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+                const response = await axios.get(`${apiUrl}/api/user/authenticated`, {
                     headers: { 
                         'x-access-token': decoded.userId,
                         'email': userEmail

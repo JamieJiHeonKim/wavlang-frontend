@@ -57,7 +57,7 @@ const LoginForm = () => {
         try{
             setNotVerified(false);
             const res = await axios
-                .post("http://localhost:8080/api/signin", {
+                .post(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/signin`, {
                     email: emailInput,
                     password: passwordInput
                 }, {

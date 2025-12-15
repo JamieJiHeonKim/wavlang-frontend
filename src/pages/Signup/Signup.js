@@ -207,7 +207,8 @@ const Signup = () => {
                 "email": userEmail,
                 "password": obj.password
             };
-            const { data } = await axios.post("http://localhost:8080/api/new_user", user, {
+            const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+            const { data } = await axios.post(`${apiUrl}/api/new_user`, user, {
                 headers: {
                     "Content-Type": "application/json",
                 },

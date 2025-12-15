@@ -30,7 +30,7 @@ const ForgotPassword = () => {
         try{
             setIsResponseReady(false);
             const res = await axios
-                .post("http://localhost:8080/api/forgot-password", {
+                .post(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/forgot-password`, {
                     email: emailInput
                 }, {
                     headers: {

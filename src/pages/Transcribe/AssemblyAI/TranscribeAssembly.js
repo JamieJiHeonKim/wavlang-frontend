@@ -30,8 +30,12 @@ function TranscribeAssemblyAI({file, topic, analysisType, analysisLanguage}) {
     const run = async () => {
         const formData = new FormData();
         formData.append('audioFile', file);
+        
+        setScriptLoaded(false);
+        
         try {
-            const response = await fetch(`http://localhost:8080/api/transcribe_assemblyai`, {
+            const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+            const response = await fetch(`${apiUrl}/api/transcribe_assemblyai`, {
                 method: 'POST',
                 body: formData
             });
@@ -193,9 +197,19 @@ function TranscribeAssemblyAI({file, topic, analysisType, analysisLanguage}) {
                 <div className='text-body'>
                     {response}
                 </div> : 
-                <SpinningCircles className='loadingIcon' fill='#919191' stroke="transparent" strokeOpacity={.2} speed={1.25} />}
+                <div style={{ textAlign: 'center' }}>
+                    <SpinningCircles className='loadingIcon' fill='#919191' stroke="transparent" strokeOpacity={.2} speed={1.25} />
+                    <p style={{ marginTop: '10px', color: '#666' }}>Transcribing audio... This may take a moment.</p>
+                </div>
+            }
             <br />
-            {analysisLoaded ? <div className='text-body'>{keyPoints}</div> : <SpinningCircles className='loadingIcon' fill='#919191' stroke="transparent" strokeOpacity={.2} speed={1.25} />}
+            {analysisLoaded ? 
+                <div className='text-body'>{keyPoints}</div> : 
+                <div style={{ textAlign: 'center' }}>
+                    <SpinningCircles className='loadingIcon' fill='#919191' stroke="transparent" strokeOpacity={.2} speed={1.25} />
+                    <p style={{ marginTop: '10px', color: '#666' }}>Generating analysis...</p>
+                </div>
+            }
             <br />
         </div>
     )

@@ -2,11 +2,17 @@
 nixPkgs = ['nodejs-18_x']
 
 [phases.install]
-cmds = ['npm ci']
+cmds = ['npm install --legacy-peer-deps']
 
 [phases.build]
-cmds = ['npm run build']
+cmds = ['CI=false npm run build']
 
 [start]
 cmd = 'node server.js'
+
+[variables]
+NODE_ENV = 'production'
+CI = 'false'
+DISABLE_ESLINT_PLUGIN = 'true'
+GENERATE_SOURCEMAP = 'false'
 
