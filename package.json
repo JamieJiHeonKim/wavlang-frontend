@@ -17,7 +17,6 @@
     "@hookform/resolvers": "^3.3.4",
     "@mui/icons-material": "^5.15.11",
     "@mui/material": "^5.15.11",
-    "@mui/styles": "^5.15.14",
     "@mui/x-data-grid": "^7.1.0",
     "@nivo/bar": "^0.85.1",
     "@nivo/geo": "^0.85.1",
@@ -70,7 +69,6 @@
     "wavesurfer.js": "^7.7.3",
     "web-vitals": "^2.1.4",
     "yup": "^1.4.0",
-    "zoc": "^0.0.3",
     "zod": "^3.22.4"
   },
   "scripts": {
