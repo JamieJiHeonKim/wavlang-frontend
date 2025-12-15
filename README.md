@@ -1,2 +1,1 @@
-# wavlang-frontend
-
+# Wavlang Frontend
